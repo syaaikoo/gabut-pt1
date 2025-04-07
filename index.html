@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pencari Gambar Pinterest</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 60%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #5c67f2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .img-box {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .img-box img {
+            width: 100%;
+            border-radius: 8px;
+        }
+        footer {
+            margin-top: 50px;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pencari Gambar Pinterest</h1>
+    <input type="text" id="keyword" placeholder="Masukkan kata kunci...">
+    <button onclick="cariGambar()">Cari</button>
+
+    <div class="grid" id="hasil"></div>
+
+    <footer>
+        Website by <strong>AiraaCheisyaa</strong> | Instagram: <a href="https://instagram.com/syaaikoo" target="_blank">@syaaikoo</a>
+    </footer>
+
+    <script>
+        function cariGambar() {
+            const keyword = document.getElementById('keyword').value;
+            const url = `http://127.0.0.1:5000/pinterest?text=${encodeURIComponent(keyword)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const hasilDiv = document.getElementById('hasil');
+                    hasilDiv.innerHTML = '';
+                    const gambarList = data.result.results;
+
+                    gambarList.forEach(src => {
+                        const box = document.createElement('div');
+                        box.className = 'img-box';
+                        box.innerHTML = `<img src="${src}" alt="Pinterest"><br><a href="${src}" download>Download</a>`;
+                        hasilDiv.appendChild(box);
+                    });
+                })
+                .catch(error => {
+                    alert("Gagal mengambil data dari proxy.");
+                    console.error(error);
+                });
+        }
+    </script>
+</body>
+</html>
